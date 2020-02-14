@@ -1,4 +1,4 @@
-import uuid
+import uuid,random
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -50,7 +50,21 @@ def ping_pong():
     return jsonify('pong!')
 
 
-@app.route('/book', methods=['GET', 'POST'])
+#daily energy stats
+@app.route('/dailyStats', methods=['GET'])
+def dailyStats():
+    updated = [5,10,15,30]
+    response_object = {'dailySolar': 0, 'dailyBattery': 0, 'dailyConS': 0, 'dailySave': 0, 'updated': 0}
+    response_object['dailySolar'] = random.randint(100,200)
+    response_object['dailyBattery'] = random.randint(0,100)
+    response_object['dailyConS'] = random.randint(150,199)
+    response_object['dailySave'] = random.randint(6,20)
+    response_object ['updated'] = updated[random.randint(0,3)]
+    return jsonify(response_object)
+
+
+
+@app.route('/books', methods=['GET', 'POST'])
 def all_books():
     response_object = {'status': 'success'}
     if request.method == 'POST':
