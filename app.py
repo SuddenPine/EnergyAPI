@@ -62,6 +62,39 @@ def dailyStats():
     response_object ['updated'] = updated[random.randint(0,3)]
     return jsonify(response_object)
 
+# dailyConsumptionChart: {
+#         data: {
+#           labels: ["M", "T", "W", "T", "F", "S", "S"],
+#           series: [[250, 300, 332, 311, 320, 450, 501]]
+#         },
+#         options: {
+#           lineSmooth: this.chartist.Interpolation.cardinal({
+#             tension: 0
+#           }),
+#           low: 0,
+#           high: 600, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+#           chartPadding: {
+#             top: 0,
+#             right: 0,
+#             bottom: 0,
+#             left: 0
+#           }
+#         }
+#       }
+
+#daily energy production
+@app.route('/dailyProd', methods=['GET'])
+def dailyProd():
+    #generate 
+    series = [0,0,10,20,30,40,30,10,0]
+    series[2] = series[2] + random.randint(5,10)
+    for i in range(2,8):
+        series[i] = series[i] + random.randint(5,10)
+    response_object = {"data":{"labels":[],"series":[]},"options":{"low":0, "high":0}}
+    response_object['data']['labels'] = [i for i in range(0,25,3)]
+    response_object['data']['series'] = series
+    response_object['options']['high'] = max(series) + 50
+    return jsonify(response_object)
 
 
 @app.route('/books', methods=['GET', 'POST'])
