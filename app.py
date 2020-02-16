@@ -111,12 +111,21 @@ def dailyCons():
 # weekly energy consumption
 @app.route('/weeklyCons', methods=['GET'])
 def weeklyCons():
-    #generate 
-    series = [0,0,0,0,0,0,0]
-    for i in range(0,7):
-        series[i] = series[i] + random.randint(40,80)
+    day = now.weekday()
+    weekdays = ['M','T','W','T','F','S','S']
+    #generate label
+    label = []
+    series = []
+    index = 0
+    for i in range(0,day+1):
+        label.append(weekdays[index])
+        index += 1
 
-    response_object = {"data":{"labels":["M","T","W","T","F","S","S"],"series":[[]]},"options":{"low":0, "high":0},"percentage":0,'updated':0}
+    for i in range(0,len(label)):
+        series.append(random.randint(40,80))
+
+    response_object = {"data":{"labels":[],"series":[[]]},"options":{"low":0, "high":0},"percentage":0,'updated':0}
+    response_object['data']['labels'] = label
     response_object['data']['series'][0] = series
     response_object['options']['high'] = max(series) + 50
     response_object['percentage'] = random.randint(5,20)
