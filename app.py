@@ -49,11 +49,12 @@ def remove_book(book_id):
 def ping_pong():
     return jsonify('pong!')
 
+#updated at_ options
+updated = [5,10,15,30]
 
 #daily energy stats
 @app.route('/dailyStats', methods=['GET'])
 def dailyStats():
-    updated = [5,10,15,30]
     response_object = {'dailySolar': 0, 'dailyBattery': 0, 'dailyConS': 0, 'dailySave': 0, 'updated': 0}
     response_object['dailySolar'] = random.randint(100,200)
     response_object['dailyBattery'] = random.randint(0,100)
@@ -62,40 +63,70 @@ def dailyStats():
     response_object ['updated'] = updated[random.randint(0,3)]
     return jsonify(response_object)
 
-# dailyConsumptionChart: {
-#         data: {
-#           labels: ["M", "T", "W", "T", "F", "S", "S"],
-#           series: [[250, 300, 332, 311, 320, 450, 501]]
-#         },
-#         options: {
-#           lineSmooth: this.chartist.Interpolation.cardinal({
-#             tension: 0
-#           }),
-#           low: 0,
-#           high: 600, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-#           chartPadding: {
-#             top: 0,
-#             right: 0,
-#             bottom: 0,
-#             left: 0
-#           }
-#         }
-#       }
 
 #daily energy production
 @app.route('/dailyProd', methods=['GET'])
 def dailyProd():
     #generate 
     series = [0,0,10,20,30,40,30,10,0]
-    series[2] = series[2] + random.randint(5,10)
+  
     for i in range(2,8):
-        series[i] = series[i] + random.randint(5,10)
-    response_object = {"data":{"labels":[],"series":[]},"options":{"low":0, "high":0}}
+        series[i] = series[i] + random.randint(5,60)
+
+    response_object = {"data":{"labels":[],"series":[[]]},"options":{"low":0, "high":0},"percentage":0,'updated':0}
     response_object['data']['labels'] = [i for i in range(0,25,3)]
-    response_object['data']['series'] = series
+    response_object['data']['series'][0] = series
     response_object['options']['high'] = max(series) + 50
+    response_object['percentage'] = random.randint(5,20)
+    response_object ['updated'] = updated[random.randint(0,3)]
     return jsonify(response_object)
 
+
+#daily energy consumption
+@app.route('/dailyCons', methods=['GET'])
+def dailyCons():
+    #generate 
+    series = [0,0,0,0,0,0,0,0,0]
+   
+    for i in range(2,9):
+        series[i] = series[i] + random.randint(0,60)
+
+    response_object = {"data":{"labels":[],"series":[[]]},"options":{"low":0, "high":0},"percentage":0,'updated':0}
+    response_object['data']['labels'] = [i for i in range(0,25,3)]
+    response_object['data']['series'][0] = series
+    response_object['options']['high'] = max(series) + 50
+    response_object['percentage'] = random.randint(5,20)
+    response_object ['updated'] = updated[random.randint(0,3)]
+    return jsonify(response_object)
+
+
+# weekly energy consumption
+@app.route('/weeklyCons', methods=['GET'])
+def energyByRoom():
+    #generate 
+    series = [0,0,0,0,0,0,0]
+    for i in range(0,7):
+        series[i] = series[i] + random.randint(10,60)
+
+    response_object = {"data":{"labels":["M","T","W","T","F","S","S"],"series":[[]]},"options":{"low":0, "high":0},"percentage":0,'updated':0}
+    response_object['data']['series'][0] = series
+    response_object['options']['high'] = max(series) + 50
+    response_object['percentage'] = random.randint(5,20)
+    response_object ['updated'] = updated[random.randint(0,3)]
+    return jsonify(response_object)
+
+
+#consumption by devices
+@app.route('/byDevice', methods=['GET'])
+def byDevice:
+    items = []
+
+
+
+    response_object = {"item":[]}
+
+def getDevice():
+    
 
 @app.route('/books', methods=['GET', 'POST'])
 def all_books():
