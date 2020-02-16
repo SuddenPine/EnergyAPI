@@ -1,4 +1,5 @@
-import uuid,random
+import uuid,random,datetime
+now = datetime.datetime.now()
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -68,7 +69,7 @@ def dailyStats():
 @app.route('/dailyProd', methods=['GET'])
 def dailyProd():
     #generate 
-    series = [0,0,10,20,30,40,30,10,0]
+    series = [0,0,0,0,0,0,0,0,0]
   
     for i in range(2,8):
         series[i] = series[i] + random.randint(5,60)
@@ -85,16 +86,40 @@ def dailyProd():
 #daily energy consumption
 @app.route('/dailyCons', methods=['GET'])
 def dailyCons():
-    #generate 
-    series = [0,0,0,0,0,0,0,0,0]
-   
-    for i in range(2,9):
-        series[i] = series[i] + random.randint(0,60)
+    #generate label
+    label = []
+    hour = now.hour
+    for i in range(0,9): 
+        label.append(hour) 
+        hour -= 1
+    label.reverse()
 
-    response_object = {"data":{"labels":[],"series":[[]]},"options":{"low":0, "high":0},"percentage":0,'updated':0}
-    response_object['data']['labels'] = [i for i in range(0,25,3)]
-    response_object['data']['series'][0] = series
-    response_object['options']['high'] = max(series) + 50
+    #generate solor production and energy consumption series.
+    # production   
+    series0 = [0,0,0,0,0,0,0,0,0]
+    #consumption
+    series1 = [0,0,0,0,0,0,0,0,0]
+    index = 0
+    for i in label:
+        if i in range(0,5):
+            series0[index]= 0
+            series1[index]= 0
+            index += 1
+        elif i in range(19,24):
+            series0[index]= 0
+            series1[index]= random.randint(5,70)
+            index += 1
+        else:
+            series0[index]=random.randint(10,70)
+            series1[index]=random.randint(5,70)
+            index += 1
+
+    #generate the return json object
+    response_object = {"data":{"labels":[],"series":[[],[]]},"options":{"low":0, "high":0},"percentage":0,'updated':0}
+    response_object['data']['labels'] = label
+    response_object['data']['series'][0] = series0
+    response_object['data']['series'][1] = series1
+    response_object['options']['high'] = max(series0) + 50
     response_object['percentage'] = random.randint(5,20)
     response_object ['updated'] = updated[random.randint(0,3)]
     return jsonify(response_object)
@@ -117,15 +142,15 @@ def energyByRoom():
 
 
 #consumption by devices
-@app.route('/byDevice', methods=['GET'])
-def byDevice:
-    items = []
+# @app.route('/byDevice', methods=['GET'])
+# def byDevice:
+#     items = []
 
 
 
-    response_object = {"item":[]}
+#     response_object = {"item":[]}
 
-def getDevice():
+# def getDevice():
     
 
 @app.route('/books', methods=['GET', 'POST'])
