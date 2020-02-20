@@ -59,8 +59,8 @@ def dailyStats():
     response_object = {'dailySolar': 0, 'dailyBattery': 0, 'dailyConS': 0, 'dailySave': 0, 'updated': 0}
     response_object['dailySolar'] = random.randint(100,200)
     response_object['dailyBattery'] = random.randint(0,100)
-    response_object['dailyConS'] = random.randint(150,199)
-    response_object['dailySave'] = random.randint(6,20)
+    response_object['dailyConS'] = random.randint(10,30)
+    response_object['dailySave'] = round(response_object['dailyConS'] * 0.175,3)
     response_object ['updated'] = updated[random.randint(0,3)]
     return jsonify(response_object)
 
@@ -127,7 +127,7 @@ def weeklyCons():
     response_object = {"data":{"labels":[],"series":[[]]},"options":{"low":0, "high":0},"percentage":0,'updated':0}
     response_object['data']['labels'] = label
     response_object['data']['series'][0] = series
-    response_object['options']['high'] = max(series) + 50
+    response_object['options']['high'] = max(series) + 10
     response_object['percentage'] = random.randint(5,20)
     response_object ['updated'] = updated[random.randint(0,3)]
     return jsonify(response_object)
@@ -139,15 +139,32 @@ def weeklyProd():
 
 
 #consumption by devices
-# @app.route('/byDevice', methods=['GET'])
-# def byDevice:
-#     items = []
+@app.route('/byDevice', methods=['GET'])
+def byDevice():
+    # 3 configurations of device set up
+    configList = [[{'name':'Washing Machine','consumption':0, 'room':'Kitchen'},
+               {'name':'Fridge','consumption':13, 'room':'Kitchen'},
+               {'name':'TV','consumption':20, 'room':'Living Room'},
+               {'name':'Sound System','consumption':10, 'room':'Living Room'},
+               {'name':'Lights','consumption':25, 'room':'All'}],
+               [{'name':'Washing Machine','consumption':13, 'room':'Kitchen'},
+               {'name':'Fridge','consumption':20, 'room':'Kitchen'},
+               {'name':'TV','consumption':11, 'room':'Living Room'},
+               {'name':'TV','consumption':21, 'room':'Bedroom1'},
+               {'name':'Gaming System','consumption':25, 'room':'Living Room'},
+               {'name':'Sound System','consumption':19, 'room':'Living Room'},
+               {'name':'Lights','consumption':30, 'room':'All'}],
+               [{'name':'Washing Machine','consumption':14, 'room':'Kitchen'},
+               {'name':'Fridge','consumption':16, 'room':'Kitchen'},
+               {'name':'TV','consumption':19, 'room':'Living Room'},
+               {'name':'Coffee Machine','consumption':8, 'room':'Kitchen'},
+               {'name':'Sound System','consumption':17, 'room':'Living Room'},
+               {'name':'Lights','consumption':20, 'room':'All'}]]
 
-
-
-#     response_object = {"item":[]}
-
-# def getDevice():
+    response_object = {"items":[]}
+    # randonly choose one 
+    response_object['items'] = configList[random.randint(0,2)]
+    return jsonify(response_object)
     
 
 @app.route('/books', methods=['GET', 'POST'])
